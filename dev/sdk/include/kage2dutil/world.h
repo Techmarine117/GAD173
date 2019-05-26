@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////////
+// KAGE2D
+// Copyright (C) 2019 Kojack (rajetic@gmail.com)
+//
+// KAGE2D is released under the MIT License  
+// https://opensource.org/licenses/MIT
+////////////////////////////////////////////////////////////
+
 #ifndef QGF2D_WORLD_HEADER
 #define QGF2D_WORLD_HEADER
 #include "kf/kf_vector2.h"
@@ -18,6 +26,12 @@ namespace kage
 		void render(sf::RenderWindow &rw);
 		void add(GameObject *obj);
 		void remove(GameObject *obj);
+		//void setOrderDirty();
+		void setWorldSize(kf::Vector2 size);
+		GameObject *findByID(long long id);
+		GameObject *findByTag(std::string tag);
+		std::vector<GameObject *> findAllByTag(std::string tag);
+
 		template<typename T>
 		T *build()
 		{

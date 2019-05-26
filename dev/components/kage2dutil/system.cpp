@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////////
+// KAGE2D
+// Copyright (C) 2019 Kojack (rajetic@gmail.com)
+//
+// KAGE2D is released under the MIT License  
+// https://opensource.org/licenses/MIT
+////////////////////////////////////////////////////////////
+
 #include "kage2dutil/system.h"
 
 #define WIN32_LEAN_AND_MEAN
@@ -5,8 +13,12 @@
 
 namespace kage
 {
+	bool s_initialised = false;
+
     bool initDirectory()
     {
+		if (s_initialised)
+			return true;
         char buf[MAX_PATH+1];
         GetModuleFileName(NULL,buf,MAX_PATH);
         char *p = buf;
@@ -24,6 +36,7 @@ namespace kage
             *lastslash=0;
         }
         SetCurrentDirectory(buf);
+		s_initialised = true;
         return true;
     }
 }

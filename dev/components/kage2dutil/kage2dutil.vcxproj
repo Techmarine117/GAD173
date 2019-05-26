@@ -97,11 +97,37 @@
     <ClInclude Include="..\..\sdk\include\kage2dutil\imstb_textedit.h" />
     <ClInclude Include="..\..\sdk\include\kage2dutil\imstb_truetype.h" />
     <ClInclude Include="..\..\sdk\include\kage2dutil\sfml_util.h" />
+    <ClInclude Include="..\..\sdk\include\kage2dutil\sound_manager.h" />
     <ClInclude Include="..\..\sdk\include\kage2dutil\stb_image.h" />
     <ClInclude Include="..\..\sdk\include\kage2dutil\stb_image_write.h" />
     <ClInclude Include="..\..\sdk\include\kage2dutil\system.h" />
     <ClInclude Include="..\..\sdk\include\kage2dutil\texture_manager.h" />
     <ClInclude Include="..\..\sdk\include\kage2dutil\world.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_algorithms.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_bounds.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_curves.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_euler.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_fixed.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_log.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_math.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_matrix.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_matrix2.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_matrix3.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_matrix4.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_memBlock.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_memFile.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_position.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_quaternion.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_random.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_streams.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_tag.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_time.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_types.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_vector.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_vector2.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_vector3.h" />
+    <ClInclude Include="..\..\sdk\include\kf\kf_vector4.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="anim.cpp" />
@@ -111,6 +137,7 @@
     <ClCompile Include="imgui_draw.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="sfml_util.cpp" />
+    <ClCompile Include="sound_manager.cpp" />
     <ClCompile Include="system.cpp" />
     <ClCompile Include="texture_manager.cpp" />
     <ClCompile Include="world.cpp" />

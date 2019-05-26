@@ -14,40 +14,41 @@
 #include <vector>
 
 // Tags are strings that identify properties of objects.
-
-class Tags
+namespace kf
 {
-protected:
-	std::vector<std::string> m_tags;
-
-public:
-	void add(const std::string &s)		// Add a tag to the collection.
+	class Tags
 	{
-		auto it = std::find(m_tags.begin(), m_tags.end(), s);
-		if (it == m_tags.end())
+	protected:
+		std::vector<std::string> m_tags;
+
+	public:
+		void add(const std::string &s)		// Add a tag to the collection.
 		{
-			m_tags.push_back(s);
+			auto it = std::find(m_tags.begin(), m_tags.end(), s);
+			if (it == m_tags.end())
+			{
+				m_tags.push_back(s);
+			}
 		}
-	}
 
-	void remove(const std::string &s)	// Remove a tag from the collection.
-	{
-		auto it = std::find(m_tags.begin(), m_tags.end(), s);
-		if(it!=m_tags.end())
-			m_tags.erase(it);
-	}
+		void remove(const std::string &s)	// Remove a tag from the collection.
+		{
+			auto it = std::find(m_tags.begin(), m_tags.end(), s);
+			if (it != m_tags.end())
+				m_tags.erase(it);
+		}
 
-	bool has(const std::string &s)		// Return true if the collection contains the tag.
-	{
-		return std::find(m_tags.begin(), m_tags.end(), s) != m_tags.end();
-	}
+		bool has(const std::string &s)		// Return true if the collection contains the tag.
+		{
+			return std::find(m_tags.begin(), m_tags.end(), s) != m_tags.end();
+		}
 
-	std::vector<std::string> &getVector()
-	{
-		return m_tags;
-	}
-};
-
+		std::vector<std::string> &getVector()
+		{
+			return m_tags;
+		}
+	};
+}
 
 
 #endif

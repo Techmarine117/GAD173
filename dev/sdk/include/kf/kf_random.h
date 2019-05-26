@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////////
+// KF - Kojack Framework
+// Copyright (C) 2019 Kojack (rajetic@gmail.com)
+//
+// KF is released under the MIT License  
+// https://opensource.org/licenses/MIT
+////////////////////////////////////////////////////////////
+
 #ifndef KF_RANDOM_HEADER
 #define KF_RANDOM_HEADER
 

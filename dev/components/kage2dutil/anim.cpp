@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////////
+// KAGE2D
+// Copyright (C) 2019 Kojack (rajetic@gmail.com)
+//
+// KAGE2D is released under the MIT License  
+// https://opensource.org/licenses/MIT
+////////////////////////////////////////////////////////////
+
 #include "kage2dutil/anim.h"
 
 namespace kage

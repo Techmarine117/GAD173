@@ -88,8 +88,8 @@ void App::run()
 		// Clear the window.
 		m_window.clear();
 
-		kage::World::render(m_window);
 		render();
+		kage::World::render(m_window);
 
 		ImGui::SFML::Render(m_window);
 

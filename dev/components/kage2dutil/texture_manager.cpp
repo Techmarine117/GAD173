@@ -1,6 +1,15 @@
+////////////////////////////////////////////////////////////
+// KAGE2D
+// Copyright (C) 2019 Kojack (rajetic@gmail.com)
+//
+// KAGE2D is released under the MIT License  
+// https://opensource.org/licenses/MIT
+////////////////////////////////////////////////////////////
+
 #include "kage2dutil/gameobject.h"
 #include <map>
 #include <string>
+#include "kage2dutil/system.h"
 
 namespace
 {
@@ -18,10 +27,16 @@ namespace kage
 			if (it == g_textures.end())
 			{
 				sf::Texture *im = new sf::Texture;
+				kage::initDirectory();
 				if (!im->loadFromFile(filename))
 				{
-					delete im;
-					return 0;
+					im->create(32, 32);
+					sf::Color pixels[32 * 32];
+					for (int i = 0; i < 32 * 32; ++i)
+					{
+						pixels[i] = sf::Color::Magenta;
+					}
+					im->update((sf::Uint8*)pixels);
 				}
 				g_textures[filename] = im;
 				return im;
