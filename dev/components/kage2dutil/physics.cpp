@@ -5,10 +5,11 @@
 // KAGE2D is released under the MIT License  
 // https://opensource.org/licenses/MIT
 ////////////////////////////////////////////////////////////
-
+ 
 #include "kage2dutil/physics.h"
 #include "kage2dutil/gameobject.h"
 #include "kage2dutil/sfml_util.h"
+#include "kf/kf_log.h"
 
 namespace kage
 {
@@ -32,14 +33,13 @@ namespace kage
 
 				kf::Vector2 norm = worldManifold.normal;
 
-				if (f1->GetUserData())
-				{
-					((GameObject*)(f1->GetUserData()))->onCollision((GameObject *)f2->GetUserData());
-				}
+				GameObject *g1 = getGameObject(f1);
+				GameObject *g2 = getGameObject(f2);
 
-				if (f2->GetUserData())
+				if (g1 && g2)
 				{
-					((GameObject*)(f2->GetUserData()))->onCollision((GameObject *)f1->GetUserData());
+					g1->onCollision(g2);
+					g2->onCollision(g1);
 				}
 			}
 		};
@@ -100,11 +100,11 @@ namespace kage
 			{
 				if (!hit.hit || fraction < hit.distance)
 				{
-					GameObject *t = (GameObject *)fixture->GetUserData();
+					//GameObject *t = (GameObject *)fixture->GetUserData();
 					hit.pos.set(point.x, point.y);
 					hit.distance = fraction;
 					hit.hit = true;
-					hit.gob = t;
+					hit.fixture = fixture;
 					return fraction;
 				}
 				return 1;
@@ -118,6 +118,7 @@ namespace kage
 			int g_positionIterations = 2;
 			ContactListener g_contactListener;
 			DebugDraw g_debugDraw;
+			b2Body *g_defaultStatic = 0;
 		}
 
 		b2World *getWorld()
@@ -135,6 +136,12 @@ namespace kage
 			g_world->SetContactListener(&g_contactListener);
 			g_world->SetDebugDraw(&g_debugDraw);
 			g_debugDraw.SetFlags(b2Draw::e_shapeBit);
+			g_defaultStatic = createBody(kf::Vector2::ZERO(), 0, b2BodyType::b2_staticBody, true);
+		}
+		
+		b2Body* getDefaultStatic()
+		{
+			return g_defaultStatic;
 		}
 
 		void update(float dt)
@@ -159,44 +166,64 @@ namespace kage
 			g_world->DrawDebugData();
 		}
 
-		b2Body *createCircle(kf::Vector2f pos, float radius, float density, float damping, void *userData, b2BodyType type, float restitution)
+		b2Fixture *createCircle(b2Body *body, float radius, kf::Vector2f offset, float density, float damping, void *userData, float restitution, float friction)
 		{
-			b2BodyDef bodyDef;
-			bodyDef.position = pos;
-			bodyDef.type = type;
-			b2Body *body = g_world->CreateBody(&bodyDef);
 			b2CircleShape shape;
 			shape.m_radius = radius;
-
+			shape.m_p = offset;
 			b2FixtureDef fixDef;
 			fixDef.density = density;
 			fixDef.restitution = restitution;
+			fixDef.friction = friction;
 			fixDef.shape = &shape;
 			fixDef.userData = userData;
-			body->CreateFixture(&fixDef);
+			b2Fixture *fixture = body->CreateFixture(&fixDef);
 			body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 			body->SetLinearDamping(damping);
-			return body;
+			return fixture;
 		}
 
-		b2Body *createBox(kf::Vector2f pos, kf::Vector2f size, float density, float damping, void *userData, b2BodyType type, float restitution)
+		b2Fixture *createBox(b2Body *body, kf::Vector2f size, kf::Vector2f offset, float angle, float density, float damping, void *userData,  float restitution, float friction)
+		{
+			b2PolygonShape shape;
+			shape.SetAsBox(size.x / 2.0f, size.y / 2.0f, offset, angle);
+			b2FixtureDef fixDef;
+			fixDef.density = density;
+			fixDef.restitution = restitution;
+			fixDef.friction = friction;
+			fixDef.shape = &shape;
+			fixDef.userData = userData;
+			b2Fixture *fixture = body->CreateFixture(&fixDef);
+			body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+			body->SetLinearDamping(damping);
+			return fixture;
+		}
+
+		b2Fixture *createEdge(b2Body *body, kf::Vector2f vertex1, kf::Vector2f vertex2, float density, float damping, void *userData, float restitution, float friction)
+		{
+			b2EdgeShape shape;
+			shape.Set(vertex1, vertex2);
+			b2FixtureDef fixDef;
+			fixDef.density = density;
+			fixDef.restitution = restitution;
+			fixDef.friction = friction;
+			fixDef.shape = &shape;
+			fixDef.userData = userData;
+			b2Fixture *fixture = body->CreateFixture(&fixDef);
+			body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+			body->SetLinearDamping(damping);
+			return fixture;
+		}
+
+		b2Body *createBody(kf::Vector2f pos, float angle, b2BodyType type, bool fixedRotation, void *userData)
 		{
 			b2BodyDef bodyDef;
 			bodyDef.position = pos;
 			bodyDef.type = type;
-			b2Body *body = g_world->CreateBody(&bodyDef);
-			b2PolygonShape shape;
-			shape.SetAsBox(size.x / 2.0f, size.y / 2.0f);
-
-			b2FixtureDef fixDef;
-			fixDef.density = density;
-			fixDef.restitution = restitution;
-			fixDef.shape = &shape;
-			fixDef.userData = userData;
-			body->CreateFixture(&fixDef);
-			body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
-			body->SetLinearDamping(damping);
-			return body;
+			bodyDef.angle = angle;
+			bodyDef.fixedRotation = fixedRotation;
+			bodyDef.userData = userData;
+			return g_world->CreateBody(&bodyDef);
 		}
 
 		Hit rayCast(kf::Vector2 p1, kf::Vector2 p2)
@@ -205,5 +232,259 @@ namespace kage
 			g_world->RayCast(&cb, p1, p2);
 			return cb.hit;
 		}
+
+		GameObject *getGameObject(b2Fixture *fixture)
+		{
+			if (fixture)
+			{
+				b2Body *body = fixture->GetBody();
+				return (GameObject*)body->GetUserData();
+			}
+			return 0;
+		}
+
+		GameObject *getGameObject(b2Body *body)
+		{
+			if (body)
+			{
+				return (GameObject*)body->GetUserData();
+			}
+			return 0;
+		}
+
+		b2Fixture *getTouching(b2Body *body, int fixtureNum)
+		{
+			b2Fixture *f = body->GetFixtureList();
+			int i = 0;
+			for (; f; f = f->GetNext(),++i)
+			{
+				if (i == fixtureNum)
+				{
+					break;
+				}
+			}
+			if (!f)
+			{
+				return 0;
+			}
+			for (b2ContactEdge* c = body->GetContactList(); c; c = c->next)
+			{
+				b2Fixture *f1;
+				b2Fixture *f2;
+				
+				if (c->contact->GetFixtureA() == f)
+				{
+					f1 = c->contact->GetFixtureA();
+					f2 = c->contact->GetFixtureB();
+				}
+				else if(c->contact->GetFixtureB() == f)
+				{
+					f1 = c->contact->GetFixtureB();
+					f2 = c->contact->GetFixtureA();
+				}
+				else
+				{
+					continue;
+				}
+
+				if (c->contact->IsTouching())
+				{
+					return f2;
+				}
+			}
+			return 0;
+		}
+
+
+		CircleBuilder &CircleBuilder::pos(const kf::Vector2 &p)
+		{
+			m_pos = p;
+			return *this;
+		}
+
+		CircleBuilder &CircleBuilder::pos(float x, float y)
+		{
+			m_pos.set(x, y);
+			return *this;
+		}
+
+		CircleBuilder &CircleBuilder::radius(float r)
+		{
+			m_radius = r;
+			return *this;
+		}
+
+		CircleBuilder &CircleBuilder::mass(float m)
+		{
+			m_mass = m;
+			m_calcDensity = true;
+			return *this;
+		}
+
+		CircleBuilder &CircleBuilder::density(float d)
+		{
+			m_damping = d;
+			m_calcDensity = false;
+			return *this;
+		}
+
+		CircleBuilder &CircleBuilder::damping(float d)
+		{
+			m_damping = d;
+			return *this;
+		}
+
+		CircleBuilder &CircleBuilder::userData(void *ud)
+		{
+			m_userData = ud;
+			return *this;
+		}
+
+		CircleBuilder &CircleBuilder::restitution(float r)
+		{
+			m_restitution = r;
+			return *this;
+		}
+
+		CircleBuilder &CircleBuilder::friction(float f)
+		{
+			m_friction = f;
+			return *this;
+		}
+
+		b2Fixture *CircleBuilder::build(b2Body *body)
+		{
+			if (m_calcDensity)
+			{
+				m_density = m_mass / (m_radius * m_radius * 3.14159265);
+			}
+			return createCircle(body, m_radius, m_pos, m_density, m_damping, m_userData, m_restitution, m_friction);
+		}
+
+		BoxBuilder &BoxBuilder::pos(const kf::Vector2 &p)
+		{
+			m_pos = p;
+			return *this;
+		}
+
+		BoxBuilder &BoxBuilder::pos(float x, float y)
+		{
+			m_pos.set(x, y);
+			return *this;
+		}
+
+		BoxBuilder &BoxBuilder::size(float x, float y)
+		{
+			m_size.set(x, y);
+			return *this;
+		}
+
+		BoxBuilder &BoxBuilder::size(float s)
+		{
+			m_size.set(s, s);
+			return *this;
+		}
+
+		BoxBuilder &BoxBuilder::size(const kf::Vector2 &s)
+		{
+			m_size = s;
+			return *this;
+		}
+
+		BoxBuilder &BoxBuilder::angle(float a)
+		{
+			m_angle = a;
+			return *this;
+		}
+
+		BoxBuilder &BoxBuilder::mass(float m)
+		{
+			m_mass = m;
+			m_calcDensity = true;
+			return *this;
+		}
+
+		BoxBuilder &BoxBuilder::density(float d)
+		{
+			m_damping = d;
+			m_calcDensity = false;
+			return *this;
+		}
+
+		BoxBuilder &BoxBuilder::damping(float d)
+		{
+			m_damping = d;
+			return *this;
+		}
+
+		BoxBuilder &BoxBuilder::userData(void *ud)
+		{
+			m_userData = ud;
+			return *this;
+		}
+
+		BoxBuilder &BoxBuilder::restitution(float r)
+		{
+			m_restitution = r;
+			return *this;
+		}
+		
+		BoxBuilder &BoxBuilder::friction(float f)
+		{
+			m_friction = f;
+			return *this;
+		}
+
+		b2Fixture *BoxBuilder::build(b2Body *body)
+		{
+			if (m_calcDensity)
+			{
+				m_density = m_mass / (m_size.x * m_size.y);
+			}
+			return createBox(body, m_size, m_pos, m_angle, m_density, m_damping, m_userData, m_restitution, m_friction);
+		}
+
+		BodyBuilder &BodyBuilder::type(b2BodyType type)
+		{
+			m_type = type;
+			return *this;
+		}
+
+		BodyBuilder &BodyBuilder::pos(const kf::Vector2 &p)
+		{
+			m_pos = p;
+			return *this;
+		}
+
+		BodyBuilder &BodyBuilder::pos(float x, float y)
+		{
+			m_pos.set(x, y);
+			return *this;
+		}
+
+		BodyBuilder &BodyBuilder::angle(float a)
+		{
+			m_angle = a;
+			return *this;
+		}
+
+		BodyBuilder &BodyBuilder::userData(void *ud)
+		{
+			m_userData = ud;
+			return *this;
+		}
+
+		BodyBuilder &BodyBuilder::fixedRotation(bool fr)
+		{
+			m_fixedRotation = fr;
+			return *this;
+		}
+
+		b2Body *BodyBuilder::build()
+		{
+			return createBody(m_pos, m_angle, m_type, m_fixedRotation, m_userData);
+		}
+
 	}
+
 }
