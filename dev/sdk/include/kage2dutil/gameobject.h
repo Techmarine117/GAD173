@@ -46,6 +46,7 @@ namespace kage
 		virtual void update(float dt);
 		virtual void render(sf::RenderWindow &rw);
 		virtual void onCollision(GameObject *obj);
+		virtual void onCollision(b2Fixture *fix);
 		virtual GameObject &position(const kf::Vector2 &pos);
 		virtual GameObject &velocity(const kf::Vector2 &vel);
 		virtual GameObject &position(float x, float y);

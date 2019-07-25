@@ -72,7 +72,7 @@ namespace kage
 			m_body->GetWorld()->DestroyBody(m_body);
 			m_body = 0;
 		}
-		World::remove(this);
+		//World::remove(this);
 		delete m_sprite;
 		m_sprite = 0;
 	}
@@ -151,6 +151,11 @@ namespace kage
 	}
 
 	void GameObject::onCollision(GameObject *obj)
+	{
+
+	}
+
+	void GameObject::onCollision(b2Fixture *fix)
 	{
 
 	}

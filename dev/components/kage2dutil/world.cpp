@@ -161,8 +161,34 @@ namespace kage
 			auto it = worldObjects.find(obj->m_id);
 			if (it != worldObjects.end())
 			{
+				delete it->second;
 				worldObjects.erase(it);
 			}
+		}
+
+		void remove(std::string tag)
+		{
+			for (std::map<long long, GameObject *>::iterator it = worldObjects.begin(); it != worldObjects.end();)
+			{
+				if (it->second->m_tags.has(tag))
+				{
+					delete it->second;
+					it = worldObjects.erase(it);
+				}
+				else
+				{
+					it++;
+				}
+			}
+		}
+
+		void clear()
+		{
+			for (std::map<long long, GameObject *>::iterator it = worldObjects.begin(); it != worldObjects.end();++it)
+			{
+				delete it->second;
+			}
+			worldObjects.clear();
 		}
 
 		GameObject *findByID(long long id)

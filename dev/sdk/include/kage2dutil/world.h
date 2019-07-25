@@ -26,6 +26,8 @@ namespace kage
 		void render(sf::RenderWindow &rw);
 		void add(GameObject *obj);
 		void remove(GameObject *obj);
+		void remove(std::string tag);
+		void clear();
 		//void setOrderDirty();
 		void setWorldSize(kf::Vector2 size);
 		GameObject *findByID(long long id);

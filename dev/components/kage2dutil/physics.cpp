@@ -36,10 +36,27 @@ namespace kage
 				GameObject *g1 = getGameObject(f1);
 				GameObject *g2 = getGameObject(f2);
 
-				if (g1 && g2)
+				if (g1)
 				{
-					g1->onCollision(g2);
-					g2->onCollision(g1);
+					if (g2)
+					{
+						g1->onCollision(g2);
+					}
+					else
+					{
+						g1->onCollision(f2);
+					}
+				}
+				if (g2)
+				{
+					if (g1)
+					{
+						g2->onCollision(g1);
+					}
+					else
+					{
+						g2->onCollision(f1);
+					}
 				}
 			}
 		};
@@ -119,6 +136,7 @@ namespace kage
 			ContactListener g_contactListener;
 			DebugDraw g_debugDraw;
 			b2Body *g_defaultStatic = 0;
+			std::vector<b2Fixture *> g_fixturesFromCallback;
 		}
 
 		b2World *getWorld()
@@ -147,6 +165,35 @@ namespace kage
 		void update(float dt)
 		{
 			g_world->Step(dt, g_velocityIterations, g_positionIterations);
+		}
+
+		void clear()
+		{
+			b2Body *body = g_world->GetBodyList();
+			while (body)
+			{
+				auto next = body->GetNext();
+				if (body != g_defaultStatic)
+				{
+					g_world->DestroyBody(body);
+				}
+				body = next;
+			}
+			clearDefaultStaticFixtures();
+		}
+
+		void clearDefaultStaticFixtures()
+		{
+			if (g_defaultStatic)
+			{
+				b2Fixture *fix = g_defaultStatic->GetFixtureList();
+				while (fix)
+				{
+					auto next = fix->GetNext();
+					g_defaultStatic->DestroyFixture(fix);
+					fix = next;
+				}
+			}
 		}
 
 		void gravity(b2Vec2 gravity)
@@ -258,7 +305,7 @@ namespace kage
 			int i = 0;
 			for (; f; f = f->GetNext(),++i)
 			{
-				if (i == fixtureNum)
+				if ((int)f->GetUserData() == fixtureNum)
 				{
 					break;
 				}
@@ -295,60 +342,43 @@ namespace kage
 			return 0;
 		}
 
-
-		CircleBuilder &CircleBuilder::pos(const kf::Vector2 &p)
+		class AABBCallback :public b2QueryCallback
 		{
-			m_pos = p;
-			return *this;
-		}
+		public:
+			b2Vec2 pos;
+			AABBCallback(b2Vec2 p) : pos(p)
+			{
 
-		CircleBuilder &CircleBuilder::pos(float x, float y)
+			}
+			bool ReportFixture(b2Fixture* fixture)
+			{
+				if (fixture->TestPoint(pos))
+				{
+					g_fixturesFromCallback.push_back(fixture);
+				}
+				return true;
+			}
+		};
+
+		b2Fixture *testPoint(kf::Vector2 pos)
 		{
-			m_pos.set(x, y);
-			return *this;
+			g_fixturesFromCallback.clear();
+			AABBCallback aabbcb(pos);
+			b2AABB aabb;
+			aabb.lowerBound = b2Vec2(pos);
+			aabb.upperBound = b2Vec2(pos);
+			g_world->QueryAABB(&aabbcb, aabb);
+			if (g_fixturesFromCallback.size() > 0)
+			{
+				return g_fixturesFromCallback.front();
+			}
+			return 0;
 		}
+		
 
 		CircleBuilder &CircleBuilder::radius(float r)
 		{
 			m_radius = r;
-			return *this;
-		}
-
-		CircleBuilder &CircleBuilder::mass(float m)
-		{
-			m_mass = m;
-			m_calcDensity = true;
-			return *this;
-		}
-
-		CircleBuilder &CircleBuilder::density(float d)
-		{
-			m_damping = d;
-			m_calcDensity = false;
-			return *this;
-		}
-
-		CircleBuilder &CircleBuilder::damping(float d)
-		{
-			m_damping = d;
-			return *this;
-		}
-
-		CircleBuilder &CircleBuilder::userData(void *ud)
-		{
-			m_userData = ud;
-			return *this;
-		}
-
-		CircleBuilder &CircleBuilder::restitution(float r)
-		{
-			m_restitution = r;
-			return *this;
-		}
-
-		CircleBuilder &CircleBuilder::friction(float f)
-		{
-			m_friction = f;
 			return *this;
 		}
 
@@ -359,18 +389,6 @@ namespace kage
 				m_density = m_mass / (m_radius * m_radius * 3.14159265);
 			}
 			return createCircle(body, m_radius, m_pos, m_density, m_damping, m_userData, m_restitution, m_friction);
-		}
-
-		BoxBuilder &BoxBuilder::pos(const kf::Vector2 &p)
-		{
-			m_pos = p;
-			return *this;
-		}
-
-		BoxBuilder &BoxBuilder::pos(float x, float y)
-		{
-			m_pos.set(x, y);
-			return *this;
 		}
 
 		BoxBuilder &BoxBuilder::size(float x, float y)
@@ -388,50 +406,6 @@ namespace kage
 		BoxBuilder &BoxBuilder::size(const kf::Vector2 &s)
 		{
 			m_size = s;
-			return *this;
-		}
-
-		BoxBuilder &BoxBuilder::angle(float a)
-		{
-			m_angle = a;
-			return *this;
-		}
-
-		BoxBuilder &BoxBuilder::mass(float m)
-		{
-			m_mass = m;
-			m_calcDensity = true;
-			return *this;
-		}
-
-		BoxBuilder &BoxBuilder::density(float d)
-		{
-			m_damping = d;
-			m_calcDensity = false;
-			return *this;
-		}
-
-		BoxBuilder &BoxBuilder::damping(float d)
-		{
-			m_damping = d;
-			return *this;
-		}
-
-		BoxBuilder &BoxBuilder::userData(void *ud)
-		{
-			m_userData = ud;
-			return *this;
-		}
-
-		BoxBuilder &BoxBuilder::restitution(float r)
-		{
-			m_restitution = r;
-			return *this;
-		}
-		
-		BoxBuilder &BoxBuilder::friction(float f)
-		{
-			m_friction = f;
 			return *this;
 		}
 
