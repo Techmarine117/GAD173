@@ -14,7 +14,7 @@ Rabbit::Rabbit()
 				.pos(0, 0)
 				.userData(this)	// This lets the body know which GameObject owns it
 				.build();
-
+	m_body->SetGravityScale(0);
 	// Make a fixture (collision shape) for the body
 	kage::Physics::CircleBuilder()
 		.radius(0.4)
@@ -30,6 +30,25 @@ Rabbit::~Rabbit()
 void Rabbit::update(float deltaT)
 {
 	// Do logic here
+	kf::Vector2 vel;
+	
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	{
+		vel.x = -3;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	{
+		vel.x = 3;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	{
+		vel.y = -3;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	{
+		vel.y = 3;
+	}
+	velocity(vel);
 
 	GameObject::update(deltaT);
 }
@@ -41,6 +60,7 @@ void Rabbit::onCollision(GameObject *obj)
 		//m_dead = true;		// kills itself
 		//obj->m_dead = true;	// kills the other object
 	//}
+	
 }
 
 void Rabbit::onCollision(b2Fixture *fix)
@@ -49,4 +69,3 @@ void Rabbit::onCollision(b2Fixture *fix)
 	//{
 	//}
 }
-

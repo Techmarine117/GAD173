@@ -1,11 +1,11 @@
-#include "Rabbit.h"
+#include "rabbit2.h"
 #include "example.h"
 
 Rabbit::Rabbit()
 {
 	m_sprite = kage::TextureManager::getSprite("data/zazaka.png");
 	kage::centreOrigin(m_sprite);
-	m_tags.add("Rabbit");
+	m_tags.add("rabbit2");
 
 	m_physicsStyle = GameObject::e_psBox2D;
 
@@ -36,17 +36,9 @@ void Rabbit::update(float deltaT)
 
 void Rabbit::onCollision(GameObject *obj)
 {
-	//if (obj->m_tags.has("enemy"))
-	//{
-		//m_dead = true;		// kills itself
+	if (obj->m_tags.has("enemy"))
+	{
+		m_dead = true;			// kills itself
 		//obj->m_dead = true;	// kills the other object
-	//}
+	}
 }
-
-void Rabbit::onCollision(b2Fixture *fix)
-{
-	//if ((int)(fix->GetUserData()) == 1234) // Fake ID value 1234
-	//{
-	//}
-}
-

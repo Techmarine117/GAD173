@@ -116,7 +116,7 @@ namespace kage
 				if(it!=worldObjects.end())
 				{
 					delete it->second;
-					//worldObjects.erase(it);
+					worldObjects.erase(it);
 				}
 			}
 		}

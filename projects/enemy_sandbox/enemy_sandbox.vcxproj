@@ -11,10 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{7190FE2B-F555-4537-A8D7-8DD1D2F772B6}</ProjectGuid>
+    <ProjectGuid>{81f549a0-5e01-4895-9028-0b9f886ce50b}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>base</RootNamespace>
+    <RootNamespace>enemy_sandbox</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -98,7 +98,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="app.h" />
+    <ClInclude Include="Demon.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="example.h" />
+    <ClInclude Include="Frost.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Rabbit.h">
       <SubType>
       </SubType>
@@ -106,8 +114,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="app.cpp" />
+    <ClCompile Include="Demon.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="dependencies.cpp" />
     <ClCompile Include="example.cpp" />
+    <ClCompile Include="Frost.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Rabbit.cpp">
       <SubType>

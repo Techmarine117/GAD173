@@ -388,7 +388,9 @@ namespace kage
 			{
 				m_density = m_mass / (m_radius * m_radius * 3.14159265);
 			}
-			return createCircle(body, m_radius, m_pos, m_density, m_damping, m_userData, m_restitution, m_friction);
+			b2Fixture *fix = createCircle(body, m_radius, m_pos, m_density, m_damping, m_userData, m_restitution, m_friction);
+			fix->SetSensor(m_sensor);
+			return fix;
 		}
 
 		BoxBuilder &BoxBuilder::size(float x, float y)
@@ -415,7 +417,10 @@ namespace kage
 			{
 				m_density = m_mass / (m_size.x * m_size.y);
 			}
-			return createBox(body, m_size, m_pos, m_angle, m_density, m_damping, m_userData, m_restitution, m_friction);
+			b2Fixture *fix = createBox(body, m_size, m_pos, m_angle, m_density, m_damping, m_userData, m_restitution, m_friction);
+			fix->SetSensor(m_sensor);
+			return fix;
+
 		}
 
 		BodyBuilder &BodyBuilder::type(b2BodyType type)

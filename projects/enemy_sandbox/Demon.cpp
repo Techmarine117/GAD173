@@ -1,11 +1,12 @@
-#include "Rabbit.h"
+#include "Demon.h"
 #include "example.h"
+//#include "fireball.h"
 
-Rabbit::Rabbit()
+Demon::Demon()
 {
-	m_sprite = kage::TextureManager::getSprite("data/zazaka.png");
+	m_sprite = kage::TextureManager::getSprite("data/demon.png");
 	kage::centreOrigin(m_sprite);
-	m_tags.add("Rabbit");
+	m_tags.add("Demon");
 
 	m_physicsStyle = GameObject::e_psBox2D;
 
@@ -22,19 +23,17 @@ Rabbit::Rabbit()
 		.build(m_body); // We need to tell the builder which body to attach to
 }
 
-Rabbit::~Rabbit()
+Demon::~Demon()
 {
 
 }
 
-void Rabbit::update(float deltaT)
+void Demon::update(float deltaT)
 {
-	// Do logic here
-
 	GameObject::update(deltaT);
 }
 
-void Rabbit::onCollision(GameObject *obj)
+void Demon::onCollision(GameObject *obj)
 {
 	//if (obj->m_tags.has("enemy"))
 	//{
@@ -43,7 +42,7 @@ void Rabbit::onCollision(GameObject *obj)
 	//}
 }
 
-void Rabbit::onCollision(b2Fixture *fix)
+void Demon::onCollision(b2Fixture *fix)
 {
 	//if ((int)(fix->GetUserData()) == 1234) // Fake ID value 1234
 	//{

@@ -1,11 +1,11 @@
 #pragma once
 #include "kage2dutil/gameobject.h"
 
-class Rabbit : public kage::GameObject
+class Frost : public kage::GameObject
 {
 public:
-	Rabbit();
-	~Rabbit();
+	Frost();
+	~Frost();
 
 	//void render();
 	void update(float deltaT);

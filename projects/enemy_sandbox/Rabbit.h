@@ -10,5 +10,5 @@ public:
 	//void render();
 	void update(float deltaT);
 	void onCollision(GameObject *obj);
-	
+	void onCollision(b2Fixture *fix);
 };
