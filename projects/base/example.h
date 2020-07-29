@@ -3,8 +3,8 @@
 #include "app.h"
 #include"EditorTile.h"
 
-#define TILE_ROW_COUNT 10
-#define TILE_COLUMN_COUNT 20
+#define TILE_ROW_COUNT 20
+#define TILE_COLUMN_COUNT 10
 
 class Example : public App
 {
@@ -21,14 +21,13 @@ public:
 	sf::Sprite* m_cat;
 	float tileWidth;
 	float tileHeight;
-	float tileCountColumn = TILE_COLUMN_COUNT;
-	float tileCountRow = TILE_ROW_COUNT;
+	
 	sf::RectangleShape tilePlaceHolder;
 	EditorTile* editorTiles[TILE_ROW_COUNT * TILE_COLUMN_COUNT];
 
-	sf::RectangleShape horizonalline[10];
+	sf::RectangleShape horizonalline[TILE_COLUMN_COUNT];
 	int linecount;
-	sf::RectangleShape vertilcallines[25];
+	sf::RectangleShape vertilcallines[TILE_ROW_COUNT];
 
 
 };

@@ -1,4 +1,5 @@
 #include "example.h"
+#include <math.h>
 
 Example::Example(): App()
 {
@@ -22,8 +23,8 @@ bool Example::start()
 	
 	float winWidth = m_window.getSize().x;
 	float winHeight = m_window.getSize().y;
-	tileWidth = winWidth / tileCountColumn;
-	tileHeight = (winHeight * 0.5)/ tileCountRow;
+	tileWidth = winWidth / TILE_ROW_COUNT;
+	tileHeight = (winHeight * 0.5)/ TILE_COLUMN_COUNT;
 
 	//initializing title placeholder
 	tilePlaceHolder = sf::RectangleShape();
@@ -33,7 +34,7 @@ bool Example::start()
 
 	
 	// makes horizonalline
-	for (size_t i = 0; i <tileCountRow; i++)
+	for (size_t i = 0; i < TILE_COLUMN_COUNT; i++)
 	{
 		horizonalline[i] =  sf::RectangleShape();
 		horizonalline[i].setSize(sf::Vector2f(winWidth, 2));
@@ -43,7 +44,7 @@ bool Example::start()
 	}
 
 	// makes vertilcallines
-	for (size_t i = 0; i < tileCountColumn ; i++)
+	for (size_t i = 0; i < TILE_ROW_COUNT; i++)
 	{
 		vertilcallines[i] =  sf::RectangleShape();
 		vertilcallines[i].setSize(sf::Vector2f(winHeight * 0.5, 2));
@@ -80,12 +81,22 @@ void Example::update(float deltaT)
 	std::cout << mousePosition.x << "" << mousePosition.y << std::endl;
 	int newMouseX = mousePosition.x / tileWidth;
 	int newMouseY = mousePosition.y / tileHeight;
+	if (newMouseX <= 0)
+		newMouseX = 0;
+	if (newMouseX >= TILE_ROW_COUNT -1)
+		newMouseX = TILE_ROW_COUNT -1;
+	if (newMouseY <= 0)
+		newMouseY = 0;
+
+	if (newMouseY >= TILE_COLUMN_COUNT -1)
+		newMouseY = TILE_COLUMN_COUNT -1;
+
 	tilePlaceHolder.setPosition(sf::Vector2f(newMouseX * tileWidth,newMouseY * tileHeight));
 	// lift click event
 	if ((sf::Mouse::isButtonPressed(sf::Mouse::Left))) 
 	{
-		int index = newMouseY * tileCountColumn + newMouseX;
-
+		int index = newMouseY * TILE_ROW_COUNT + newMouseX;
+		
 		if (editorTiles[index] != nullptr) 
 		{
 			editorTiles[index]->setTile(sf::Vector2f(newMouseX * tileWidth, newMouseY * tileHeight));
@@ -119,12 +130,12 @@ void Example::render()
 	m_window.draw(*m_backgroundSprite);
 	m_window.draw(tilePlaceHolder);
 	
-	for (size_t i = 0; i < tileCountRow ; i++)
+	for (size_t i = 0; i < TILE_COLUMN_COUNT; i++)
 	{
 		m_window.draw(horizonalline[i]);
 	}
 
-	for (size_t i = 0; i < tileCountColumn; i++)
+	for (size_t i = 0; i < TILE_ROW_COUNT; i++)
 	{
 		m_window.draw(vertilcallines[i]);
 
