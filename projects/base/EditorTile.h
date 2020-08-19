@@ -8,7 +8,11 @@ public:
 	
 	EditorTile(float tileWidth, float tileHeight);
 		
+	void EditorTile::setcolor(sf::Color color);
+	
 
+
+	
 
 	
 	void EditorTile::setTile(sf::Vector2f pos);

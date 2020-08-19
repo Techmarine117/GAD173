@@ -100,6 +100,7 @@
     <ClInclude Include="app.h" />
     <ClInclude Include="EditorTile.h" />
     <ClInclude Include="example.h" />
+    <ClInclude Include="Saving.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="app.cpp" />
@@ -107,6 +108,7 @@
     <ClCompile Include="EditorTile.cpp" />
     <ClCompile Include="example.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Saving.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\dev\components\kage2dutil\kage2dutil.vcxproj">

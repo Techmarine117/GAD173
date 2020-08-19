@@ -21,6 +21,12 @@ void EditorTile::setTile(sf::Vector2f pos)
 	
 }
 
+void EditorTile::setcolor(sf::Color color) 
+{
+	tileShape->setFillColor(color);
+
+}
+
 
 void EditorTile::DisableTile()
 {
