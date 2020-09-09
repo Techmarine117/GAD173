@@ -4,6 +4,7 @@
 #include"EditorTile.h"
 #include "Saving.h"
 
+
 #define TILE_ROW_COUNT 20
 #define TILE_COLUMN_COUNT 10
 #define MAX_GRID_INDEX 20 * 10
@@ -40,6 +41,17 @@ public:
 	float tileWidth;
 	float tileHeight;
 	int maxCellIndex = (TILE_ROW_COUNT * TILE_COLUMN_COUNT);
+
+	int mainOffset;
+	int textOffset;
+	sf::Vector2f WindowCenter;
+	sf::Text mainText[4];
+	sf::Font font;
+	
+	bool ismainMenu;
+	bool isGame;
+	bool isGameEditor;
+	
 	
 	sf::RectangleShape tilePlaceHolder;
 	EditorTile* editorTiles[TILE_ROW_COUNT * TILE_COLUMN_COUNT];

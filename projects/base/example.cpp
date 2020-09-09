@@ -74,6 +74,7 @@ void Example::loadTilemap()
 			break;
 
 
+
 		}
 			
 	}
@@ -82,6 +83,9 @@ void Example::loadTilemap()
 
 bool Example::start()
 {
+	ismainMenu = true;
+
+
 	m_backgroundSprite = kage::TextureManager::getSprite("data/sky.jpg");
 	sf::Vector2u resolution = m_backgroundSprite->getTexture()->getSize();
 	m_backgroundSprite->setScale(float(m_window.getSize().x) / resolution.x, float(m_window.getSize().y) / resolution.y);
@@ -117,7 +121,44 @@ bool Example::start()
 		vertilcallines[i].setPosition(sf::Vector2f(tileWidth * (i + 1),0));
 		vertilcallines[i].setFillColor(sf::Color::Green);
 
+
+
+
+
 	}
+
+	if (ismainMenu)
+
+	{
+		mainOffset = 100;
+		textOffset = 90;
+		sf::Vector2f windowcenter = sf::Vector2f(m_window.getSize().x / 2, m_window.getSize().y / 2);
+		if (font.loadFromFile("data/bluehigh.ttf"))
+		{
+			std::cout << "can't load font" << std::endl;
+
+		}
+
+		for (size_t i = 0; i < 4; i++) {
+			mainText[i].setFont(font);
+			mainText[i].setPosition(sf::Vector2f(
+				windowcenter.x - (mainText[i].getGlobalBounds().width / 2),
+				windowcenter.y - (mainText[i].getGlobalBounds().width / 2) + (textOffset * i) + mainOffset));
+			mainText[i].setColor(sf::Color::White);
+			mainText[i].setCharacterSize(100);
+
+
+		}
+
+		mainText[0].setString("play");
+		mainText[1].setString("editor");
+		mainText[3].setString("options");
+		mainText[2].setString("Exit");
+
+
+
+	}
+	
 	
 
 	
@@ -131,139 +172,213 @@ bool Example::start()
 
 void Example::update(float deltaT)
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && m_window.hasFocus())
-	{
-		m_running = false;
-	}
+		sf::Vector2f mousePosition = (sf::Vector2f)sf::Mouse::getPosition(m_window);
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			for (size_t i = 0; i < 3; i++)
+			{
+				
+			sf::FloatRect bound =	mainText[i].getGlobalBounds();
 
-	ImGui::Begin("Kage2D");
-	if(ImGui::Button("Exit"))
-	{ 
-		m_running = false;
-	}
-	ImGui::End();
+			if (bound.contains(mousePosition)) 
+			{
+				switch (i)
+				{
+				case 0:
+					std::cout <<" Play Button is pressed "<< std::endl;
 
-	sf::Vector2f mousePosition = (sf::Vector2f)sf::Mouse::getPosition(m_window);
-	//std::cout << "Mouse Position X - " << mousePosition.x << " | " << "Mouse Position Y - " << mousePosition.y << std::endl;
-	int newMouseX = mousePosition.x / tileWidth;
-	int newMouseY = mousePosition.y / tileHeight;
-	if (newMouseX <= 0)
-		newMouseX = 0;
-	if (newMouseX >= TILE_ROW_COUNT -1)
-		newMouseX = TILE_ROW_COUNT -1;
-	if (newMouseY <= 0)
-		newMouseY = 0;
 
-	if (newMouseY >= TILE_COLUMN_COUNT -1)
-		newMouseY = TILE_COLUMN_COUNT -1;
+					break;
+				case 1:
+					std::cout << "Editor Button is pressed" << std::endl;
+					isGameEditor = true;
+					ismainMenu = false;
+					break;
+				case 2:
+					std::cout << "Exit Button is pressed" << std::endl;
+					m_window.close();
+					break;
+				case 3:
+					std::cout << "options is pressed" << std::endl;
+				default:
 
-	tilePlaceHolder.setPosition(sf::Vector2f(newMouseX * tileWidth,newMouseY * tileHeight));
-	// keyboard presses
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) 
-	{
+
+					break;
+				}
+
+
+			}
+				
+			}
+		}
+
 		
+
 	
-		selectedTileType = 1;
-		selectedColor = sf::Color::White;
-
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
-	{
-
-
-		selectedTileType = 2;
-		selectedColor = sf::Color::Red;
-
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
-	{
-
-		loadScene("file");
-		loadTilemap();
-
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::O))
-	{
-
-
-		saveScene("file");
-
-	}
-
-	// lift click event
-
-	if ((sf::Mouse::isButtonPressed(sf::Mouse::Left))) 
-	{
-		int index = newMouseY * TILE_ROW_COUNT + newMouseX;
-		
-		if (editorTiles[index] != nullptr) 
-		{
-			editorTiles[index]->setTile(sf::Vector2f(newMouseX * tileWidth, newMouseY * tileHeight));
-			editorTiles[index]->setcolor(selectedColor);
-			cellMap[index] = selectedTileType;
-		}
-		else
-		{
-			editorTiles[index] = new EditorTile(tileWidth, tileHeight);
-			editorTiles[index]->setTile(sf::Vector2f(newMouseX * tileWidth, newMouseY * tileHeight));
-			editorTiles[index]->setcolor(selectedColor);
-			cellMap[index] = selectedTileType;
-
-		}
-
-
-		// Right click event
-		if ((sf::Mouse::isButtonPressed(sf::Mouse::Right))) 
-		{
-			
-		
-			
-		}
-		for (size_t i = 0; i < 200; i++)
-		{
-			
-
-			
-		}
-
-
 	
 
 	
+
+	if (isGame) 
+	{
+		sf::Vector2f windowcenter = sf::Vector2f(m_window.getSize().x / 2, m_window.getSize().y / 2);
+		m_backgroundSprite = kage::TextureManager::getSprite("data/sky.jpg");
+      
+	}
+	
+
+	
+
+	if (isGameEditor)
+	{
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && m_window.hasFocus())
+		{
+			m_running = false;
+		}
+
+		ImGui::Begin("Kage2D");
+		if (ImGui::Button("Exit"))
+		{
+			m_running = false;
+		}
+		ImGui::End();
+		//std::cout << "Mouse Position X - " << mousePosition.x << " | " << "Mouse Position Y - " << mousePosition.y << std::endl;
+		int newMouseX = mousePosition.x / tileWidth;
+		int newMouseY = mousePosition.y / tileHeight;
+		if (newMouseX <= 0)
+			newMouseX = 0;
+		if (newMouseX >= TILE_ROW_COUNT - 1)
+			newMouseX = TILE_ROW_COUNT - 1;
+		if (newMouseY <= 0)
+			newMouseY = 0;
+
+		if (newMouseY >= TILE_COLUMN_COUNT - 1)
+			newMouseY = TILE_COLUMN_COUNT - 1;
+
+
+
 		
-		
+		// keyboard presses
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
+		{
+
+
+			selectedTileType = 1;
+			selectedColor = sf::Color::White;
+
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
+		{
+
+
+			selectedTileType = 2;
+			selectedColor = sf::Color::Red;
+
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+		{
+
+			loadScene("file");
+			loadTilemap();
+
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::O))
+		{
+
+
+			saveScene("file");
+
+		}
+
+
+		// lift click event
+
+		if ((sf::Mouse::isButtonPressed(sf::Mouse::Left)))
+		{
+			int index = newMouseY * TILE_ROW_COUNT + newMouseX;
+
+			if (editorTiles[index] != nullptr)
+			{
+				editorTiles[index]->setTile(sf::Vector2f(newMouseX * tileWidth, newMouseY * tileHeight));
+				editorTiles[index]->setcolor(selectedColor);
+				cellMap[index] = selectedTileType;
+			}
+			else
+			{
+				editorTiles[index] = new EditorTile(tileWidth, tileHeight);
+				editorTiles[index]->setTile(sf::Vector2f(newMouseX * tileWidth, newMouseY * tileHeight));
+				editorTiles[index]->setcolor(selectedColor);
+				cellMap[index] = selectedTileType;
+
+			}
+
+
+
+			for (size_t i = 0; i < 200; i++)
+			{
+
+
+
+			}
+
+
+
+
+
+
+
+		}
 	}
 
 }
 
 void Example::render()
 {
-	m_window.draw(*m_backgroundSprite);
-	m_window.draw(tilePlaceHolder);
-	
-	for (size_t i = 0; i < TILE_COLUMN_COUNT; i++)
-	{
-		m_window.draw(horizonalline[i]);
-	}
 
-	for (size_t i = 0; i < TILE_ROW_COUNT; i++)
+	if (isGame) 
 	{
-		m_window.draw(vertilcallines[i]);
+
 
 	}
-
-	for (size_t i = 0; i < TILE_ROW_COUNT * TILE_COLUMN_COUNT; i++)
+	if (ismainMenu) 
 	{
-		if( editorTiles[i]!=nullptr && editorTiles[i]->active)
+		m_window.draw(mainText[2]);
+		m_window.draw(mainText[0]);
+		m_window.draw(mainText[1]);
+		m_window.draw(mainText[3]);
+		
+	}
+	if (isGameEditor)
+	{
+
+
+		m_window.draw(*m_backgroundSprite);
+		
+
+		for (size_t i = 0; i < TILE_COLUMN_COUNT; i++)
 		{
+			m_window.draw(horizonalline[i]);
+		}
 
-
-		m_window.draw(*editorTiles[i]->tileShape);
+		for (size_t i = 0; i < TILE_ROW_COUNT; i++)
+		{
+			m_window.draw(vertilcallines[i]);
 
 		}
+
+		for (size_t i = 0; i < TILE_ROW_COUNT * TILE_COLUMN_COUNT; i++)
+		{
+			if (editorTiles[i] != nullptr && editorTiles[i]->active)
+			{
+
+
+				m_window.draw(*editorTiles[i]->tileShape);
+
+			}
+		}
 	}
-	
 	
 }
 
