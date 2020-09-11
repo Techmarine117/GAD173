@@ -1,19 +1,20 @@
 #pragma once
-
+#include"Scenes.h"
 #include "app.h"
 #include "kage2dutil/physics.h"
-#include "rabbit.h"
 
-class Example : public App
+
+class Game: public Scenes
 {
 public:
-	Example();
-	virtual ~Example();
+	Game();
+	virtual ~Game();
 	virtual bool start();
 	virtual void update(float deltaT);
 	virtual void render();
 	virtual void cleanup();
-	static Example &inst();
-
+	static Game&inst();
+	
+	sf::CircleShape mousePointer;
 	sf::Sprite *m_backgroundSprite;
 };

@@ -16,6 +16,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>base</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <ProjectName>Game_scene</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -98,21 +99,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="app.h" />
-    <ClInclude Include="example.h" />
-    <ClInclude Include="Rabbit.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
+    <ClInclude Include="editorTile.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameEditor.h" />
+    <ClInclude Include="save.h" />
+    <ClInclude Include="Scenes.h" />
+    <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="app.cpp" />
     <ClCompile Include="dependencies.cpp" />
-    <ClCompile Include="example.cpp" />
+    <ClCompile Include="editorTile.cpp" />
+    <ClCompile Include="Game..cpp" />
+    <ClCompile Include="GameEditor.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Rabbit.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
+    <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="save.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\dev\components\kage2dutil\kage2dutil.vcxproj">

@@ -164,7 +164,7 @@ namespace kage
 
 		void update(float dt)
 		{
-			g_world->Step(dt, g_velocityIterations, g_positionIterations);
+			//g_world->Step(dt, g_velocityIterations, g_positionIterations);
 		}
 
 		void clear()

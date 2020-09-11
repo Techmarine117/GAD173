@@ -102,7 +102,6 @@
     <ClInclude Include="example.h" />
     <ClInclude Include="GameEditor.h" />
     <ClInclude Include="Saving.h" />
-    <ClInclude Include="scene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="app.cpp" />
@@ -112,7 +111,6 @@
     <ClCompile Include="GameEditor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Saving.cpp" />
-    <ClCompile Include="scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\dev\components\kage2dutil\kage2dutil.vcxproj">
